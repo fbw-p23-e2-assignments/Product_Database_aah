@@ -28,8 +28,8 @@ def fetch_product_data(product_id):
 
 
 def create_products_table(cursor):
-
-    cursor.execute("""CREATE TABLE if not EXISTS products
+    cursor.execute(
+        """CREATE TABLE if not EXISTS products
     (
 
                 title TEXT, 
@@ -40,52 +40,70 @@ def create_products_table(cursor):
                 date_added TIMESTAMP,
                 total_cost INT
     )
-    """)
-
+    """
+    )
 
 
 def insert_product_into_db(cursor, product_data):
     date_added = datetime.now() - timedelta(days=random.randint(0, 365))
 
-    total_cost = product_data['price'] * random.randint(1, 10)
-    
-    cursor.execute('''
+    total_cost = product_data["price"] * random.randint(1, 10)
+
+    cursor.execute(
+        """
         INSERT INTO products (title, category, price, description, date_added, total_cost)
         VALUES (?, ?, ?, ?, ?, ?)
-    ''', (
-        product_data['title'],
-        product_data['category'],
-        product_data['price'],
-        product_data['description'],
-        date_added,
-        total_cost
-    ))
+    """,
+        (
+            product_data["title"],
+            product_data["category"],
+            product_data["price"],
+            product_data["description"],
+            date_added,
+            total_cost,
+        ),
+    )
     print(f"Product '{product_data['title']}' added to the database.")
 
-try: 
 
-    conn = sqlite3.connect('products.db')
+try:
+    conn = sqlite3.connect("products.db")
     cursor = conn.cursor()
     create_products_table(cursor)
 
-    cursor.execute('DELETE from products')
-    print('The rows in products are succesfully deleted')
+    cursor.execute("DELETE from products")
+    print("The rows in products are succesfully deleted")
 
-    start = int(input('Enter the start number: '))
-    end = int(input('Enter the end number: '))
+    start = int(input("Enter the start number: "))
+    end = int(input("Enter the end number: "))
 
-    for product_id in range(start ,end + 1):
+    for product_id in range(start, end + 1):
         data = fetch_product_data(product_id)
         if data:
             insert_product_into_db(cursor, data)
 
     conn.commit()
     conn.close()
-    print('Succesfull imported the data')
+    print("Succesfull imported the data")
 
 except ValueError as v:
-    print('Enter no decimal numbers: ', v)
+    print("Enter no decimal numbers: ", v)
 
 except sqlite3.Error as s:
-    print('See here the error: ', s)
+    print("See here the error: ", s)
 
+    cursor.execute(
+        """
+        INSERT INTO products (title, category, price, description, date_added, total_cost)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """,
+        (
+            product_data["title"],
+            product_data["category"],
+            product_data["price"],
+            product_data["description"],
+            date_added,
+            total_cost,
+        ),
+    )
+    print(f"Product '{product_data['title']}' added to the database.")
