@@ -32,29 +32,33 @@ def create_products_table(cursor):
     conn = sqlite3.connect()
     cur = conn.cursor()
 
-    cur.execute("""CREATE TABLE if not EXISTS products(
+    cur.execute(
+        """CREATE TABLE if not EXISTS products(
                 title TEXT, 
                 category TEXT, 
                 price INT, 
                 description TEXT, 
                 date_added TIMESTAMP
-    )""")
+    )"""
+    )
 
 
 def insert_product_into_db(cursor, product_data):
     date_added = datetime.now() - timedelta(days=random.randint(0, 365))
-    total_cost = product_data['price'] * random.randint(1, 10)
-    
-    cursor.execute('''
+    total_cost = product_data["price"] * random.randint(1, 10)
+
+    cursor.execute(
+        """
         INSERT INTO products (title, category, price, description, date_added, total_cost)
         VALUES (?, ?, ?, ?, ?, ?)
-    ''', (
-        product_data['title'],
-        product_data['category'],
-        product_data['price'],
-        product_data['description'],
-        date_added,
-        total_cost
-    ))
+    """,
+        (
+            product_data["title"],
+            product_data["category"],
+            product_data["price"],
+            product_data["description"],
+            date_added,
+            total_cost,
+        ),
+    )
     print(f"Product '{product_data['title']}' added to the database.")
-
