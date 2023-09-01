@@ -11,11 +11,6 @@ def fetch_product_data(product_id):
     try:
         # Send a GET request to the API.
         response = requests.get(api_url)
-<<<<<<< HEAD
-        print(response)
-=======
->>>>>>> main
-
         # Check if the request was successful (status code 200).
         if response.status_code == 200:
             # Parse the JSON response to get product data.
@@ -33,34 +28,25 @@ def fetch_product_data(product_id):
 
 
 def create_products_table(cursor):
-<<<<<<< HEAD
 
-    cursor.execute("""CREATE TABLE if not EXISTS products(
-=======
-    conn = sqlite3.connect()
-    cur = conn.cursor()
+    cursor.execute("""CREATE TABLE if not EXISTS products
+    (
 
-    cur.execute(
-        """CREATE TABLE if not EXISTS products(
->>>>>>> main
                 title TEXT, 
                 category TEXT, 
                 price INT, 
                 description TEXT, 
-<<<<<<< HEAD
+
                 date_added TIMESTAMP,
                 total_cost INT
-    )""")
-=======
-                date_added TIMESTAMP
-    )"""
     )
->>>>>>> main
+    """)
+
 
 
 def insert_product_into_db(cursor, product_data):
     date_added = datetime.now() - timedelta(days=random.randint(0, 365))
-<<<<<<< HEAD
+
     total_cost = product_data['price'] * random.randint(1, 10)
     
     cursor.execute('''
@@ -103,23 +89,3 @@ except ValueError as v:
 except sqlite3.Error as s:
     print('See here the error: ', s)
 
-
-=======
-    total_cost = product_data["price"] * random.randint(1, 10)
-
-    cursor.execute(
-        """
-        INSERT INTO products (title, category, price, description, date_added, total_cost)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """,
-        (
-            product_data["title"],
-            product_data["category"],
-            product_data["price"],
-            product_data["description"],
-            date_added,
-            total_cost,
-        ),
-    )
-    print(f"Product '{product_data['title']}' added to the database.")
->>>>>>> main
