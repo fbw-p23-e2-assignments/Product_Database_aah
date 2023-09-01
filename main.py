@@ -11,6 +11,7 @@ def fetch_product_data(product_id):
     try:
         # Send a GET request to the API.
         response = requests.get(api_url)
+        print(response)
 
         # Check if the request was successful (status code 200).
         if response.status_code == 200:
@@ -29,15 +30,14 @@ def fetch_product_data(product_id):
 
 
 def create_products_table(cursor):
-    conn = sqlite3.connect()
-    cur = conn.cursor()
 
-    cur.execute("""CREATE TABLE if not EXISTS products(
+    cursor.execute("""CREATE TABLE if not EXISTS products(
                 title TEXT, 
                 category TEXT, 
                 price INT, 
                 description TEXT, 
-                date_added TIMESTAMP
+                date_added TIMESTAMP,
+                total_cost INT
     )""")
 
 
@@ -57,4 +57,32 @@ def insert_product_into_db(cursor, product_data):
         total_cost
     ))
     print(f"Product '{product_data['title']}' added to the database.")
+
+try: 
+
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
+    create_products_table(cursor)
+
+    cursor.execute('DELETE from products')
+    print('The rows in products are succesfully deleted')
+
+    start = int(input('Enter the start number: '))
+    end = int(input('Enter the end number: '))
+
+    for product_id in range(start ,end + 1):
+        data = fetch_product_data(product_id)
+        if data:
+            insert_product_into_db(cursor, data)
+
+    conn.commit()
+    conn.close()
+    print('Succesfull imported the data')
+
+except ValueError as v:
+    print('Enter no decimal numbers: ', v)
+
+except sqlite3.Error as s:
+    print('See here the error: ', s)
+
 
